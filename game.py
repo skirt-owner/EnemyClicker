@@ -150,15 +150,14 @@ class Game:
                 self.playing = False
                 self.save_game()
                 self.quit()
-                self.logger.info("Обнаружено событие выхода из игры")
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     self.ESCAPE = True
-                    self.logger.debug("Нажата клавиша ESC")
+                    self.logger.debug("Button ESC was pressed.")
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:
                     self.CLICK = True
-                    self.logger.debug("Нажата кнопка мыши")
+                    self.logger.debug("Mouse button was clicked.")
             if event.type == pygame.MOUSEBUTTONUP:
                 if event.button == 1:
                     self.CLICK = False
@@ -264,8 +263,8 @@ class Game:
             )
 
             perk_name = perk.name.upper()
-            perk_bonus = f"Бонус * {perk.get_bonus()}"
-            perk_price = f"Цена * {perk.get_price()}"
+            perk_bonus = f"Bonus * {perk.get_bonus()}"
+            perk_price = f"Price * {perk.get_price()}"
 
             self.draw_text(perk_name, 14, perk_x + 80, perk_y + 15, self.WHITE)
             self.draw_text(perk_bonus, 10, perk_x + 80, perk_y + 35, self.WHITE, align="center")
@@ -287,7 +286,7 @@ class Game:
                 (buy_button_x + 2, buy_button_y + 2, buy_button_width - 4, buy_button_height - 4)
             )
 
-            self.draw_text("КУПИТЬ", 12, buy_button_x + buy_button_width // 2, buy_button_y + buy_button_height // 2,
+            self.draw_text("BUY", 12, buy_button_x + buy_button_width // 2, buy_button_y + buy_button_height // 2,
                            self.YELLOW, align="center")
 
             self.shop_buttons.append((buy_button_x, buy_button_y, buy_button_width, buy_button_height, perk))
@@ -323,7 +322,6 @@ class Game:
         if self.player.loot >= perk.get_price():
             self.player.loot -= perk.get_price()
             perk.apply(self.player)
-            self.logger.info(f"Куплен перк: {perk.name}")
             self.shop_buttons = []  # Очистить кнопки магазина после покупки
 
     def draw_info_box(self):
@@ -385,7 +383,7 @@ class Game:
         }
         with open("save.json", "w") as f:
             json.dump(data, f, indent=2)
-        self.logger.info("Игра сохранена")
+        self.logger.info("Game saved.")
 
     def load_game(self):
         """
@@ -403,9 +401,9 @@ class Game:
                 self.crit_dmg_perk.deserialize(data['cd'])
                 self.loot_bonus_perk.deserialize(data['ld'])
                 self.damage_bonus_perk.deserialize(data['db'])
-            self.logger.info(f"Игра загружена.")
+            self.logger.info(f"Game loaded.")
         except FileNotFoundError:
-            self.logger.error("Файл сохранения не найден.")
+            self.logger.error("File save.json not found.")
 
     def check_saved_game(self):
         """

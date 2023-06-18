@@ -14,6 +14,12 @@ class Enemy:
     """
     Класс, представляющий вражеский персонаж в игре.
     """
+    base_health: int
+    health: int
+    base_health_increase: int
+    base_health_growth_rate: float
+    base_health_growth_factor: float
+    enemy_count: int
 
     def __init__(self, position):
         """
@@ -68,9 +74,7 @@ class Enemy:
 
         self.health -= damage
         if self.health <= 0:
-            self.logger.info("Enemy killed!")
             return self.calculate_loot_count()
-        self.logger.debug("Enemy hit!")
         return 0
 
     def calculate_loot_count(self):
@@ -84,15 +88,12 @@ class Enemy:
         scaling_factor = 1 / (self.base_health ** 0.5)
         loot_count = int(self.base_health * scaling_factor * random.uniform(0.8, 1.2))
 
-        self.logger.info(f"Loot count: {loot_count}")
-
         return loot_count
 
     def reset_health(self):
         """
-        Сбрасывает здоровье врага до его базового значения и устанавливает флаг "мертвый" в False.
+        Сбрасывает здоровье врага до его базового значения, и устанавливает флаг "мертвый" в False.
         """
-        self.logger.info("Resetting enemy health.")
 
         self.is_dead = False
         self.play_idle_animation()
@@ -102,7 +103,6 @@ class Enemy:
         """
         Увеличивает базовое здоровье врага на основе множителя роста здоровья.
         """
-        self.logger.info("Increasing enemy health.")
 
         self.base_health += round(self.base_health_increase * self.base_health_growth_factor)
 
@@ -113,7 +113,6 @@ class Enemy:
         Returns:
             list: Список кадров анимации покоя.
         """
-        self.logger.debug("Loading idle frames.")
 
         frames = []
         directory = f"Images/Enemy/{self.enemy_count % self.levels}"
@@ -131,7 +130,6 @@ class Enemy:
         Returns:
             list: Список кадров анимации смерти.
         """
-        self.logger.debug("Loading death frames.")
 
         frames = []
         directory = f"Images/Enemy/{self.enemy_count % self.levels}"

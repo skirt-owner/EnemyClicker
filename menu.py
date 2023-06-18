@@ -153,7 +153,8 @@ class MainMenu(Menu):
         self.start_button = Button(game, "Start Game", self.middle_width - 135, self.middle_height)
         self.continue_button = Button(game, "Continue Game", self.middle_width - 135, self.middle_height + 45)
         self.credits_button = Button(game, "Credits", self.middle_width - 135, self.middle_height + 90)
-        self.buttons = [self.start_button, self.continue_button, self.credits_button]
+        self.quit_button = Button(game, "Quit", self.middle_width - 135, self.middle_height + 135)
+        self.buttons = [self.start_button, self.continue_button, self.credits_button, self.quit_button]
         self.selected_button = None
         self.logger = AdvancedLogger(__name__)
 
@@ -207,7 +208,8 @@ class MainMenu(Menu):
             elif self.selected_button == self.credits_button:
                 self.game.curr_menu = self.game.credits_menu
                 self.run_display = False
-
+            elif self.selected_button == self.quit_button:
+                self.game.quit()
             self.logger.debug(f"Button :{self.selected_button}: actions was activated.")
 
 
@@ -351,55 +353,3 @@ class PauseMenu(Menu):
                 self.run_display = False
 
             self.logger.debug(f"Button :{self.selected_button}: actions was activated.")
-
-
-class GameOverMenu(Menu):
-    """
-    Класс, представляющий меню при завершении игры.
-
-    Attributes:
-        game (Game): Игровой объект.
-        logger (AdvancedLogger): Логгер для записи информации.
-    """
-
-    def __init__(self, game):
-        """
-        Инициализация объекта класса GameOverMenu.
-
-        Args:
-            game (Game): Игровой объект.
-
-        Returns:
-            None
-        """
-        super().__init__(game)
-        self.logger = AdvancedLogger(__name__)
-
-    def display_menu(self):
-        """
-        Отображение меню при завершении игры.
-
-        Returns:
-            None
-        """
-        self.run_display = True
-        while self.run_display:
-            self.game.check_events()
-            self.check_input()
-            self.game.display.fill(self.game.BLACK)
-            self.game.draw_text('* Game Over *', 20, self.middle_width, self.middle_height - 60, self.game.WHITE)
-            self.game.draw_text('Press ESC', 15, self.middle_width, self.middle_height + 30, self.game.WHITE, 128)
-            self.blit_screen()
-
-    def check_input(self):
-        """
-        Обработка ввода пользователя.
-
-        Returns:
-            None
-        """
-        if self.game.ESCAPE:
-            self.game.playing = False
-            self.game.curr_menu = self.game.main_menu
-            self.run_display = False
-            self.logger.debug("Exiting.")
